@@ -1,0 +1,18 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+const BookShelf = ({title, children}) => (
+    <div className="bookshelf">
+        <h2 className="bookshelf-title">{title}</h2>
+        <div className="bookshelf-books">
+            {children}
+        </div>
+    </div>
+)
+
+BookShelf.propTypes = {
+    title: PropTypes.string.isRequired,
+    children: PropTypes.any.isRequired
+}
+
+export default BookShelf;
