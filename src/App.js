@@ -9,7 +9,6 @@ import ListBooks from './ListBooks';
 class BooksApp extends React.Component {
   state = {
     books: [],
-    searchResultBooks: [],
     query: '',
   }
   static propTypes = {
@@ -28,10 +27,10 @@ class BooksApp extends React.Component {
         }))        
       })
   }
-  moveBook = (book, shelf) => {
+  moveBook = (book, shelf) => {    
     BooksAPI.update(book, shelf)
       .then(() => {
-          this.getBooks();
+        this.getBooks();
       }
     );
   }
