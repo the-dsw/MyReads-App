@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import {debounce} from 'throttle-debounce';
 import * as BooksAPI from './BooksAPI'
 import Suggestions from './Suggestions';
 
@@ -10,7 +11,12 @@ class SearchBook extends React.Component {
     error: ''
   }
 
-  handleInputChange = (query) => {
+  componentWillMount() {
+    debounce(500, this.handleInputChange);
+  }
+
+  handleInputChange = (query, e) => {
+    e.persist();
     this.setState({
       query
     });
@@ -61,7 +67,7 @@ class SearchBook extends React.Component {
                 type="text" 
                 placeholder="Search by title or author"
                 ref={input => this.search = input}
-                onChange={(e) => this.handleInputChange(this.search.value)} />
+                onChange={(e) => this.handleInputChange(this.search.value, e)} />
             </form>
 
           </div>
