@@ -38,25 +38,37 @@ class SearchBook extends React.Component {
   getSearchBooks = (query) => {
     BooksAPI.search(query)
       .then((searchBooks) => {
-        if(!searchBooks.error) {
-          this.setState({
-            searchBooks,
-            error: ''
-          });
-        } else {
-          this.setState({
-            error: searchBooks.error
-          });
-        }
-        
+        BooksAPI.getAll()
+          .then((currBooks) => {
+            if(!searchBooks.error) {
+              let books = searchBooks.map((sb) => {
+                let currentBooksInShelves = currBooks.find((cb) => cb.id === sb.id );
+                currentBooksInShelves ? (sb.shelf = currentBooksInShelves.shelf) : (sb.shelf = 'None');
+                  
+                return sb;
+              })
+
+              this.setState({
+                searchBooks: books,
+                error: '',
+                query
+              });
+            } else {
+              this.setState({
+                error: searchBooks.error
+              });
+            }
+            
+          })
       })
+      
   }
 
   
   render() {
-    const { error, query } = this.state;
+    const { error, query, searchBooks } = this.state;
     const { moveBook } = this.props;
-  
+
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -76,7 +88,7 @@ class SearchBook extends React.Component {
           <ol className="books-grid">
             {error ? (
               <p style={{color: 'red'}}>{`Any Book with ${query}`}</p>
-            ) : query && (<Suggestions moveBook={moveBook} results={this.state.searchBooks} />)}
+            ) : query && (<Suggestions moveBook={moveBook} results={searchBooks} />)}
           </ol>
         </div>
       </div>
